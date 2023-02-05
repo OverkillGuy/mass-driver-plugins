@@ -2,20 +2,28 @@
 
 from pathlib import Path
 
+import pytest
+
 # from mass_driver.migration import Migration
 from mass_driver.patchdriver import PatchOutcome
 from mass_driver.tests.fixtures import copy_folder, massdrive
 
-CONFIG_FILENAME = "template_migration.toml"
 
-
-def test_template_expansion(tmp_path, datadir):
+@pytest.mark.parametrize(
+    "config_filename",
+    [
+        "migration_json.toml",
+        "migration_yaml.toml",
+        "migration_toml.toml",
+    ],
+)
+def test_template_expansion(tmp_path, datadir, config_filename):
     """Scenario: Use the template expander PatchDriver"""
     # Given a sample repo to mass-drive
     # And sample repo has counter at value 1
     repo_path = Path(tmp_path / "test_repo/")
     copy_folder(Path(datadir / "sample_repo"), repo_path)
-    config_filepath = datadir / CONFIG_FILENAME
+    config_filepath = datadir / config_filename
     # migration = Migration.from_config(config_filepath.read_text())
     # When I run mass-driver
     result = massdrive(

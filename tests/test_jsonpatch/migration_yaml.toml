@@ -1,6 +1,6 @@
 [mass-driver]
 # Common name to remember the change by across all repos
-migration_name = "[JIRA-123] Update the sample.json "
+migration_name = "[JIRA-123] Update the sample.json"
 commit_message = """Update the sample.json
 
 Apply a patch, as part of change number blablabla
@@ -10,11 +10,11 @@ See JIRA-123, where we document the need for JSON file to change.
 
 # PatchDriver class to use.
 # Selected via plugin name, from "massdriver.drivers" entrypoint
-driver = "jsonpatch"
+driver = "yamlpatch"
 
 # The dict will be loaded verbatim into the relevant PatchDriver
 [mass-driver.driver_config]
-target_file = "sample.json"
+target_file = "sample.yaml"
 
 # patch = '[{"op": "add", "path": "/baz", "value": "qux"}]'
 patch = [

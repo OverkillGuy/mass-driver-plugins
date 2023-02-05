@@ -11,7 +11,7 @@ mass-driver-plugins = "mass_driver_plugins.cli:cli"
 [tool.poetry.dependencies]
 python = "^3.10"
 # The project that these plugins extend
-mass-driver = { path = "../mass-driver/"}
+mass-driver = { path = "../mass-driver/" }
 # Poetry driver
 poetry-core = "*"
 # Json path resolving within
@@ -20,6 +20,8 @@ jsonpointer = "*"
 jsonpatch = "*"
 # Templates
 Jinja2 = "^3.1.2"
+# Yaml loading
+"ruamel.yaml" = "^0.17.21"
 
 # Note: Linters not defined in this file but .pre-commit-config.yaml, which
 # installs/manages each tool in its own isolated virtualenv
@@ -73,4 +75,6 @@ python_version = "3.10"
 [tool.poetry.plugins.'massdriver.drivers']
 poetry = 'mass_driver_plugins.poetry:Poetry'
 jsonpatch = 'mass_driver_plugins.jsonpatch:JsonPatch'
+yamlpatch = 'mass_driver_plugins.jsonpatch:YamlPatch'
+tomlpatch = 'mass_driver_plugins.jsonpatch:TomlPatch'
 templater = 'mass_driver_plugins.template:TemplatedFile'
