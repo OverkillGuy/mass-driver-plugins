@@ -3,10 +3,9 @@
 
 import json
 from pathlib import Path
-from typing import Any
 
-from jsonpatch import JsonPatch as Patch
-from mass_driver.model import PatchDriver
+import jsonpatch
+from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
 
 
 class JsonPatch(PatchDriver):
@@ -14,35 +13,27 @@ class JsonPatch(PatchDriver):
 
     target_file: Path
     """File on which to apply Json Patch"""
-    patch: Patch
-    """JSON Patch object, from RFC 6902"""
+    patch: list[dict] | str
+    """JSON Patch, from RFC 6902"""
 
-    def __init__(self, target_file: Path, path: str, op: str, value: Any):
-        """
-        RFC6902 JSON patch application in target file
-
-        target_file: The JSON file on which to apply a mutation
-        path: RFC6902 'path', to know where to apply operation
-        op: RFC6902 'op', operation
-        value: RFC6902 'value', to apply at path
-
-        """
-        self.target_file = target_file
-        single_patch = dict(op=op, path=path, value=value)
-        self.patch = Patch([single_patch])
-
-    def run(self, repo: Path, dry_run: bool = True) -> bool:
+    def run(self, repo: Path) -> PatchResult:
         """Patch the given file"""
+        breakpoint()
+        patch = self.patch
+        if isinstance(self.patch, list):
+            patch = jsonpatch.JsonPatch(self.patch)
         json_filepath_abs = repo / self.target_file
         if not json_filepath_abs.is_file():
-            raise RuntimeError("File not found: can't patch!")
-        with open(json_filepath_abs) as json_file:
-            json_dict = json.load(json_file)
-        patched_json = self.patch.apply(json_dict)
-        if dry_run:
-            return True  # Skip the saving of the dict = no file changes persist
-        breakpoint()
+            return PatchResult(
+                outcome=PatchOutcome.PATCH_DOES_NOT_APPLY,
+                details="No such file to patch",
+            )
+        try:
+            with open(json_filepath_abs) as json_file:
+                json_dict = json.load(json_file)
+        except Exception as e:
+            return PatchResult(outcome=PatchOutcome.PATCH_ERROR, details=e)
+        patched_json = jsonpatch.apply_patch(json_dict, patch)
         with open(json_filepath_abs, "w") as json_outfile:
-            # TODO: Consider pretty-print indentation param
             json.dump(patched_json, json_outfile)
-        return True
+        return PatchResult(outcome=PatchOutcome.PATCHED_OK)
