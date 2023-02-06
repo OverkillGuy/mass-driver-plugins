@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from jsonpointer import resolve_pointer, set_pointer
-from mass_driver.model import PatchDriver
+from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
 from poetry.core.pyproject.toml import PyProjectTOML
 
 
@@ -50,16 +50,19 @@ class Poetry(PatchDriver):
         else:
             return f"/tool/poetry/dependencies/{self.package}"
 
-    def run(self, repo: Path, dry_run: bool = True) -> bool:
+    def run(self, repo: Path) -> PatchResult:
         """Process the major bump file"""
         project = get_pyproject(repo)
         dep_version = resolve_pointer(project.data, self.json_pointer, None)
         if not dep_version:
-            print(f"Didn't find {self.package} in pyproject.toml test deps!")
-            return False
+            return PatchResult(
+                outcome=PatchOutcome.PATCH_DOES_NOT_APPLY,
+                details=f"Didn't find {self.package} in pyproject.toml test deps!",
+            )
         major_version, *other_versions = dep_version.split(".")
         inferior_version = int(major_version) < int(self.target_major)
-        if inferior_version and not dry_run:
-            set_pointer(project.data, self.json_pointer, f"{self.target_major}.*")
-            project.save()
-        return inferior_version
+        if not inferior_version:
+            return PatchResult(outcome=PatchOutcome.ALREADY_PATCHED)
+        set_pointer(project.data, self.json_pointer, f"{self.target_major}.*")
+        project.save()
+        return PatchResult(outcome=PatchOutcome.PATCHED_OK)

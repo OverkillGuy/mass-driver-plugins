@@ -22,7 +22,9 @@ def test_template_expansion(tmp_path, datadir):
         repo_path,
         config_filepath,
     )
-    assert result.outcome == PatchOutcome.PATCHED_OK, f"Wrong outcome from patching: {result.details}"
+    assert (
+        result.outcome == PatchOutcome.PATCHED_OK
+    ), f"Wrong outcome from patching: {result.details}"
     # target_text_post = (repo_path / migration.driver.target_file).read_text()
     # # Then the counter is bumped to config value
     # # Note: Different configfilename set the target_count to different value

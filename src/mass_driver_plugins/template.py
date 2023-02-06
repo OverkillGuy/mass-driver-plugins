@@ -1,7 +1,7 @@
 """Create templated files via Jinja2"""
 from pathlib import Path
-
 from typing import Any
+
 from jinja2 import Environment
 from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
 
