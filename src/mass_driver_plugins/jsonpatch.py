@@ -5,8 +5,9 @@ import json
 from pathlib import Path
 
 import jsonpatch
-import tomlkit
+import tomllib
 from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
+from pydantic import Extra
 from ruamel import yaml
 
 
@@ -18,11 +19,16 @@ class JsonPatchBase(PatchDriver):
     patch: list[dict] | str
     """JSON Patch, from RFC 6902"""
 
-    def deserialize(self, file_contents: str) -> dict:
+    class Config:
+        """Configuration of the JsonPatch class"""
+
+        extra = Extra.allow
+
+    def deserialize(self, fd) -> dict:
         """Load a data-tree particular file language of the day"""
         raise NotImplementedError("No serialize function implemented")
 
-    def serialize(self, file_dict: dict) -> str:
+    def serialize(self, file_dict: dict, fd):
         """Dump a data-tree back to string in the particular file language of the day"""
         raise NotImplementedError("No deserialize function implemented")
 
@@ -39,46 +45,48 @@ class JsonPatchBase(PatchDriver):
             )
         try:
             with open(json_filepath_abs) as json_file:
-                json_dict = self.deserialize(json_file.read())
+                json_dict = self.deserialize(json_file)
         except Exception as e:
             return PatchResult(outcome=PatchOutcome.PATCH_ERROR, details=e)
         patched_json = jsonpatch.apply_patch(json_dict, patch)
         with open(json_filepath_abs, "w") as json_outfile:
-            json_outfile.write(self.serialize(patched_json))
+            self.serialize(patched_json, json_outfile)
         return PatchResult(outcome=PatchOutcome.PATCHED_OK)
 
 
 class JsonPatch(JsonPatchBase):
     """Apply a JSON patch (RFC6902) on given JSON file"""
 
-    def deserialize(self, file_contents: str) -> dict:
+    def deserialize(self, fd) -> dict:
         """Load a data-tree particular file language of the day"""
-        return json.loads(file_contents)
+        return json.load(fd)
 
-    def serialize(self, file_dict: dict) -> str:
+    def serialize(self, file_dict: dict, fd):
         """Dump a data-tree back to string in the particular file language of the day"""
-        return json.dumps(file_dict)
+        json.dump(file_dict, fd)
 
 
 class YamlPatch(JsonPatchBase):
     """Apply a JSON patch (RFC6902) on given YAML file"""
 
-    def deserialize(self, file_contents: str) -> dict:
+    def deserialize(self, fd):
         """Load a data-tree particular file language of the day"""
-        return yaml.load(file_contents)
+        self._yaml = yaml.YAML(typ="rt")
+        self._yaml.indent(mapping=2, sequence=4, offset=2)
+        return self._yaml.load(fd)
 
-    def serialize(self, file_dict: dict) -> str:
+    def serialize(self, file_dict: dict, fd):
         """Dump a data-tree back to string in the particular file language of the day"""
-        return yaml.dump(file_dict)
+        self._yaml.dump(file_dict, fd)
 
 
 class TomlPatch(JsonPatchBase):
     """Apply a JSON patch (RFC6902) on given TOML file"""
 
-    def deserialize(self, file_contents: str) -> dict:
+    def deserialize(self, fd):
         """Load a data-tree particular file language of the day"""
-        return tomlkit.loads(file_contents)
+        return tomllib.load(fd)
 
-    def serialize(self, file_dict: dict) -> str:
+    def serialize(self, file_dict: dict, fd):
         """Dump a data-tree back to string in the particular file language of the day"""
-        return tomlkit.dumps(file_dict)
+        tomllib.dump(file_dict, fd)

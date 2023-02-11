@@ -9,9 +9,9 @@ readme = "README.md"
 mass-driver-plugins = "mass_driver_plugins.cli:cli"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 # The project that these plugins extend
-mass-driver = { path = "../mass-driver/" }
+mass-driver = {git = "https://github.com/OverkillGuy/mass-driver.git"}
 # Poetry driver
 poetry-core = "*"
 # Json path resolving within
@@ -34,6 +34,8 @@ pytest-cov = "3.*"
 pytest-clarity = "1.*"
 # Expose unittest.Mocker in pytest
 pytest-mock = "*"
+# Test-specific data directories
+pytest-datadir = "*"
 
 [tool.poetry.group.docs.dependencies]
 # Main documentation-as-code (HTML/PDF generator)
