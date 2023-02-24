@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 
 from jinja2 import Environment
-from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
+from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
 
 
 class TemplatedFile(PatchDriver):

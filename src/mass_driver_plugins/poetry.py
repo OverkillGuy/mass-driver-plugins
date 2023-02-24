@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from jsonpointer import resolve_pointer, set_pointer
-from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
+from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
 from poetry.core.pyproject.toml import PyProjectTOML
 
 

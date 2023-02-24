@@ -3,7 +3,7 @@
 from pathlib import Path
 
 # from mass_driver.migration import Migration
-from mass_driver.patchdriver import PatchOutcome
+from mass_driver.models.patchdriver import PatchOutcome
 from mass_driver.tests.fixtures import copy_folder, massdrive
 
 CONFIG_FILENAME = "template_migration.toml"
@@ -18,13 +18,13 @@ def test_template_expansion(tmp_path, datadir):
     config_filepath = datadir / CONFIG_FILENAME
     # migration = Migration.from_config(config_filepath.read_text())
     # When I run mass-driver
-    result = massdrive(
+    migration_result, forge_result = massdrive(
         str(repo_path),
         config_filepath,
     )
     assert (
-        result.outcome == PatchOutcome.PATCHED_OK
-    ), f"Wrong outcome from patching: {result.details}"
+        migration_result.outcome == PatchOutcome.PATCHED_OK
+    ), f"Wrong outcome from patching: {migration_result.details}"
     # target_text_post = (repo_path / migration.driver.target_file).read_text()
     # # Then the counter is bumped to config value
     # # Note: Different configfilename set the target_count to different value

@@ -5,8 +5,7 @@ import json
 from pathlib import Path
 
 import jsonpatch
-import tomllib
-from mass_driver.patchdriver import PatchDriver, PatchOutcome, PatchResult
+from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
 from pydantic import Extra
 from ruamel import yaml
 
@@ -44,10 +43,10 @@ class JsonPatchBase(PatchDriver):
                 details="No such file to patch",
             )
         try:
-            with open(json_filepath_abs) as json_file:
+            with open(json_filepath_abs, "rb") as json_file:
                 json_dict = self.deserialize(json_file)
         except Exception as e:
-            return PatchResult(outcome=PatchOutcome.PATCH_ERROR, details=e)
+            return PatchResult(outcome=PatchOutcome.PATCH_ERROR, details=str(e))
         patched_json = jsonpatch.apply_patch(json_dict, patch)
         with open(json_filepath_abs, "w") as json_outfile:
             self.serialize(patched_json, json_outfile)
@@ -78,15 +77,3 @@ class YamlPatch(JsonPatchBase):
     def serialize(self, file_dict: dict, fd):
         """Dump a data-tree back to string in the particular file language of the day"""
         self._yaml.dump(file_dict, fd)
-
-
-class TomlPatch(JsonPatchBase):
-    """Apply a JSON patch (RFC6902) on given TOML file"""
-
-    def deserialize(self, fd):
-        """Load a data-tree particular file language of the day"""
-        return tomllib.load(fd)
-
-    def serialize(self, file_dict: dict, fd):
-        """Dump a data-tree back to string in the particular file language of the day"""
-        tomllib.dump(file_dict, fd)

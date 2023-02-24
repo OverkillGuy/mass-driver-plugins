@@ -11,7 +11,7 @@ mass-driver-plugins = "mass_driver_plugins.cli:cli"
 [tool.poetry.dependencies]
 python = "^3.11"
 # The project that these plugins extend
-mass-driver = {git = "https://github.com/OverkillGuy/mass-driver.git"}
+mass-driver = "^0.8"
 # Poetry driver
 poetry-core = "*"
 # Json path resolving within
@@ -78,5 +78,4 @@ python_version = "3.10"
 poetry = 'mass_driver_plugins.poetry:Poetry'
 jsonpatch = 'mass_driver_plugins.jsonpatch:JsonPatch'
 yamlpatch = 'mass_driver_plugins.jsonpatch:YamlPatch'
-tomlpatch = 'mass_driver_plugins.jsonpatch:TomlPatch'
 templater = 'mass_driver_plugins.template:TemplatedFile'
