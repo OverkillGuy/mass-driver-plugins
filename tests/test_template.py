@@ -19,7 +19,7 @@ def test_template_expansion(tmp_path, datadir):
     # migration = Migration.from_config(config_filepath.read_text())
     # When I run mass-driver
     result = massdrive(
-        repo_path,
+        str(repo_path),
         config_filepath,
     )
     assert (
