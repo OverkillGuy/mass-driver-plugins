@@ -7,6 +7,11 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 ## [Unreleased]
 
 
+### Added
+- New Patchdriver `yamlpatch` and `jsonpatch` using JSONPatch (RFC6902).
+- New  jinja2-based `templater` Patchdriver
+- Updated to mass-driver `0.9`
+
 ## v0.1.0 - 2022-12-27
 ### Added
 - New python module `mass_driver_plugins`, exposed as shell command `mass-driver-plugins`
