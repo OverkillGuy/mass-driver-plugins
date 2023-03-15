@@ -7,6 +7,9 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 ## [Unreleased]
 
 
+## v0.2.0 - 2023-03-15
+
+
 ### Added
 - New Patchdriver `yamlpatch` and `jsonpatch` using JSONPatch (RFC6902).
 - New  jinja2-based `templater` Patchdriver
