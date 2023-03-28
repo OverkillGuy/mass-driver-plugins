@@ -7,6 +7,14 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 ## [Unreleased]
 
 
+### Added
+- New "surgical" editing base-class `SurgicalFileEditor` (mass-driver plugin
+  name `surgical-base`), for the most difficult file-parsing-based editing.
+- New driver `surgical-ghactionparamswitch`, demonstrating surgical file editing
+  subclassing for editing YAML files of Github Actions: replaces given key/value
+  of parameters from selected github actions, leaving file otherwise intact.
+
+
 ## v0.2.0 - 2023-03-15
 
 
