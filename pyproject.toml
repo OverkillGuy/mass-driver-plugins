@@ -22,7 +22,10 @@ jsonpatch = "*"
 Jinja2 = "^3.1.2"
 # Yaml loading
 "ruamel.yaml" = "^0.17.21"
-
+# Parser library for surgical
+tree-sitter = "*"
+# Parsers for well-known languages
+tree-sitter-languages = "*"
 # Note: Linters not defined in this file but .pre-commit-config.yaml, which
 # installs/manages each tool in its own isolated virtualenv
 
@@ -79,3 +82,5 @@ poetry = 'mass_driver_plugins.poetry:Poetry'
 jsonpatch = 'mass_driver_plugins.jsonpatch:JsonPatch'
 yamlpatch = 'mass_driver_plugins.jsonpatch:YamlPatch'
 templater = 'mass_driver_plugins.template:TemplatedFile'
+surgical-base = 'mass_driver_plugins.surgical:SurgicalFileEditor'
+surgical-ghactionparamswitch = 'mass_driver_plugins.surgical:GithubActionParameterReplacer'

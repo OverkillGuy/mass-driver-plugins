@@ -1,0 +1,84 @@
+# File .github/CI.yaml
+# from my other project qrxfil:
+# https://github.com/OverkillGuy/qrxfil/blob/master/.github/workflows/CI.ymlhttps://github.com/OverkillGuy/qrxfil/blob/master/.github/workflows/CI.yml
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+name: Continuous integration
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - nightly
+          - 1.42.0 # MSRV
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    container: pandoc/ubuntu-latex:latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - nightly
+          - 1.42.0 # MSRV
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install compiler for Rust
+        run: apt-get update && apt-get install -y build-essential && apt-get clean && rm -rf /var/lib/apt/lists/*
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --all-features
+
+  pre-commit: # Includes clippy and fmt
+    name: Pre-commit hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+      - uses: pre-commit/action@v2.0.0
+        with:
+          extra_args: --all --all-files
+
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+      - uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --no-deps
