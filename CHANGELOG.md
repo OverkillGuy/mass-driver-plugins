@@ -6,6 +6,9 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 
 ## [Unreleased]
 
+## Added
+- Update to mass-driver `0.11`
+
 
 ## v0.3.0 - 2023-03-29
 
