@@ -44,6 +44,22 @@ docker-build-release:
 docker-build-dev:
 	docker build -t ${DOCKER_IMAGE_NAME}-dev .
 
+# Update mass-driver dependency, with Changelog entry and commit
+# Set TO variable to the new version to spec
+.PHONY: update-mass-driver
+update-mass-driver:
+    # Make sure you have set TO=XX.YY
+	sed -E -i \
+		's/mass-driver = "\^[0-9]+\.[0-9]+"/mass-driver = "^${TO}"/' \
+		pyproject.toml
+	sed -i \
+		"s/\(## \[Unreleased\]\)/\1\n\n\n### Added\n- Updated to mass-driver \`${TO}\`/" \
+		CHANGELOG.md
+	git add CHANGELOG.md pyproject.toml
+	# Check the CHANGELOG layout before committing, then:
+	# git commit -m "Update mass-driver to ${TO}"
+
+
 # Make a release commit + tag, creating Changelog entry
 # Set BUMP variable to any of poetry-supported (major, minor, patch)
 # or number (1.2.3 etc), see 'poetry version' docs for details
