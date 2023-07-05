@@ -16,16 +16,17 @@ from mass_driver.tests.fixtures import copy_folder, massdrive
         "migration_yaml.toml",
     ],
 )
-def test_template_expansion(tmp_path, datadir, config_filename):
+def test_template_expansion(tmp_path, datadir, config_filename, monkeypatch):
     """Scenario: Use the json/yaml/tomlpatcher PatchDriver"""
     # Given a sample repo to mass-drive
     # And sample repo has counter at value 1
     repo_path = Path(tmp_path / "test_repo/")
     copy_folder(Path(datadir / "sample_repo"), repo_path)
     config_filepath = datadir / config_filename
+    monkeypatch.chdir(repo_path)
     # migration = Migration.from_config(config_filepath.read_text())
     # When I run mass-driver
-    result, _junk = massdrive(
+    result, _forge_junk, _scan_junk = massdrive(
         str(repo_path),
         config_filepath,
     )

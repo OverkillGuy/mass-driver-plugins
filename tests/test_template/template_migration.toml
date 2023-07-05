@@ -1,3 +1,10 @@
+[mass-driver.source]
+source_name = "csv-filelist"
+
+[mass-driver.source.source_config]
+csv_file = "template_repo.csv"
+
+
 [mass-driver.migration]
 # Common name to remember the change by across all repos
 migration_name = "[JIRA-123] Bump counter.txt to 1"
@@ -16,7 +23,6 @@ driver_name = "templater"
 [mass-driver.migration.driver_config]
 target_file = "templated.txt"
 # "test_repo" is the name of a repo, for which the config is the dict
-context.test_repo = {keyword = "world"}
 jinja_args = {}
 template = """Hello {{ keyword }}
 """

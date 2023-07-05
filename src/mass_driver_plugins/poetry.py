@@ -6,6 +6,7 @@ from typing import Optional
 
 from jsonpointer import resolve_pointer, set_pointer
 from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
+from mass_driver.models.repository import ClonedRepo
 from poetry.core.pyproject.toml import PyProjectTOML
 
 
@@ -50,9 +51,9 @@ class Poetry(PatchDriver):
         else:
             return f"/tool/poetry/dependencies/{self.package}"
 
-    def run(self, repo: Path) -> PatchResult:
+    def run(self, repo: ClonedRepo) -> PatchResult:
         """Process the major bump file"""
-        project = get_pyproject(repo)
+        project = get_pyproject(repo.cloned_path)
         dep_version = resolve_pointer(project.data, self.json_pointer, None)
         if not dep_version:
             return PatchResult(

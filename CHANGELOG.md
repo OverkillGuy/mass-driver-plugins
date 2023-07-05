@@ -7,10 +7,17 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 ## [Unreleased]
 
 
+### Added
+- `TemplatedFile` PatchDriver now uses `Repo.patch_data` as jinja context. Repo
+  metadata from repo discovery is thus usable directly.
+- Updated to mass-driver `0.15`
+
+
 ## v0.3.2 - 2023-06-10
 
 ### Added
 - Updated to mass-driver `0.14`
+
 
 ## v0.3.1 - 2023-04-03
 
@@ -19,7 +26,6 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 
 
 ## v0.3.0 - 2023-03-29
-
 
 ### Added
 - New "surgical" editing base-class `SurgicalFileEditor` (mass-driver plugin

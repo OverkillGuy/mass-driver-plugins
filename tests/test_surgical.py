@@ -20,7 +20,7 @@ def test_surgical(tmp_path, datadir, mocker):
     config_filepath = datadir / CONFIG_FILENAME
     migration = load_activity_toml(config_filepath.read_text()).migration
     # When I run mass-driver
-    migration_result, _forge_result = massdrive(
+    migration_result, _forge_result, _scan_result = massdrive(
         str(repo_path),
         config_filepath,
     )

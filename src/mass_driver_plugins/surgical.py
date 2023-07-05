@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
+from mass_driver.models.repository import ClonedRepo
 from tree_sitter import Node, Parser
 from tree_sitter_languages import get_language
 
@@ -43,9 +44,9 @@ class SurgicalFileEditor(PatchDriver):
         """Surgically edit the file to fix the badness"""
         raise NotImplementedError("Base class doesn't know to surgically edit the file")
 
-    def run(self, repo: Path) -> PatchResult:
+    def run(self, repo: ClonedRepo) -> PatchResult:
         """Process the template file"""
-        target_fullpath = repo / Path(self.target_file)
+        target_fullpath = repo.cloned_path / Path(self.target_file)
         content_str = target_fullpath.read_text()
         language = get_language(self.language)
         query = language.query(self.query)
