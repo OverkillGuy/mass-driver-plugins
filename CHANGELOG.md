@@ -7,6 +7,9 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 ## [Unreleased]
 
 
+## v0.4.0 - 2023-07-05
+
+
 ### Added
 - `TemplatedFile` PatchDriver now uses `Repo.patch_data` as jinja context. Repo
   metadata from repo discovery is thus usable directly.

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mass_driver_plugins"
-version = "0.3.2"
+version = "0.4.0"
 description = "Experimental plugin ecosystem for Mass Driver"
 authors = ["Jb Doyon <jb@jiby.tech>"]
 readme = "README.md"
