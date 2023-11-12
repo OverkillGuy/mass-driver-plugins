@@ -111,7 +111,7 @@ class GithubActionParameterReplacer(SurgicalFileEditor):
 
     def treesitter_query(self, captures) -> list[Node]:
         """Search the tree for compatible nodes"""
-        print(f"Got {len(captures)} raw captures")
+        self.logger.info(f"Got {len(captures)} raw captures")
         matching_nodes = []
         for node, _name in captures:
             try:

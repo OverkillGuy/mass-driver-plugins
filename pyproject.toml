@@ -11,7 +11,7 @@ mass-driver-plugins = "mass_driver_plugins.cli:cli"
 [tool.poetry.dependencies]
 python = "^3.11"
 # The project that these plugins extend
-mass-driver = "^0.16"
+mass-driver = "^0.17"
 # Poetry driver
 poetry-core = "*"
 # Json path resolving within
