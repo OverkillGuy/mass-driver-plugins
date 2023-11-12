@@ -26,8 +26,12 @@ Jinja2 = "^3.1.2"
 tree-sitter = "*"
 # Parsers for well-known languages
 tree-sitter-languages = "*"
-# Note: Linters not defined in this file but .pre-commit-config.yaml, which
 # installs/manages each tool in its own isolated virtualenv
+# Transitional dep for sphinx-autodoc2, which breaks autodoc2 on v3
+# See https://github.com/sphinx-extensions2/sphinx-autodoc2/issues/31
+astroid = "==2.15.8"
+
+# Note: Linters not defined in this file but .pre-commit-config.yaml, which
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.*"
