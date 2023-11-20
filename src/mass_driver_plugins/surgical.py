@@ -47,6 +47,8 @@ class SurgicalFileEditor(PatchDriver):
     def run(self, repo: ClonedRepo) -> PatchResult:
         """Process the template file"""
         target_fullpath = repo.cloned_path / Path(self.target_file)
+        if not target_fullpath.is_file():
+            return PatchResult(outcome=PatchOutcome.PATCH_DOES_NOT_APPLY)
         content_str = target_fullpath.read_text()
         language = get_language(self.language)
         query = language.query(self.query)
@@ -57,6 +59,8 @@ class SurgicalFileEditor(PatchDriver):
         prematching = self.treesitter_query(captures)
         bad_nodes = self.refine_search(prematching)
         mutated_content = self.surgical_edit(content_str, bad_nodes)
+        if mutated_content == content_str:
+            return PatchResult(outcome=PatchOutcome.ALREADY_PATCHED)
         target_fullpath.write_text(mutated_content)
         return PatchResult(outcome=PatchOutcome.PATCHED_OK)
 

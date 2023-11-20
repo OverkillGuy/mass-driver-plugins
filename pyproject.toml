@@ -82,9 +82,9 @@ addopts = """-vv \
 python_version = "3.10"
 
 [tool.poetry.plugins.'massdriver.drivers']
-poetry = 'mass_driver_plugins.poetry:Poetry'
 jsonpatch = 'mass_driver_plugins.jsonpatch:JsonPatch'
 yamlpatch = 'mass_driver_plugins.jsonpatch:YamlPatch'
 templater = 'mass_driver_plugins.template:TemplatedFile'
 surgical-base = 'mass_driver_plugins.surgical:SurgicalFileEditor'
 surgical-ghactionparamswitch = 'mass_driver_plugins.surgical:GithubActionParameterReplacer'
+poetry-surgical = 'mass_driver_plugins.poetry_surgical:PoetrySurgical'

@@ -6,6 +6,18 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 
 ## [Unreleased]
 
+### Changed
+
+- Replace `poetry` driver with `poetry-surgical`
+  - Old version relied on "poetry-core" pkg, which removed "save" feature.
+  - Replaced with version using so-called "surgical" editing via tree-sitter.
+
+
+### Fixed
+
+- Fix a couple edge cases of `SurgicalFileEditor` base class:
+  - Now returns `PATCH_DOES_NOT_APPLY` on no such file found
+  - Now returns `ALREADY_PATCHED` on identical file contents before/after
 
 ## v0.4.2 - 2023-11-12
 
