@@ -1,0 +1,90 @@
+[tool.poetry]
+name = "mass_driver_plugins"
+version = "0.4.2"
+description = "Experimental plugin ecosystem for Mass Driver"
+authors = ["Jb Doyon <jb@jiby.tech>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+mass-driver-plugins = "mass_driver_plugins.cli:cli"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# The project that these plugins extend
+mass-driver = "^0.17"
+# Poetry driver
+poetry-core = "*"
+# Json path resolving within
+jsonpointer = "*"
+# And json patching itself via pointers
+jsonpatch = "*"
+# Templates
+Jinja2 = "^3.1.2"
+# Yaml loading
+"ruamel.yaml" = "^0.17.21"
+# Parser library for surgical
+tree-sitter = "*"
+# Parsers for well-known languages
+tree-sitter-languages = "*"
+# installs/manages each tool in its own isolated virtualenv
+# Transitional dep for sphinx-autodoc2, which breaks autodoc2 on v3
+# See https://github.com/sphinx-extensions2/sphinx-autodoc2/issues/31
+astroid = "==2.15.8"
+
+# Note: Linters not defined in this file but .pre-commit-config.yaml, which
+
+[tool.poetry.group.test.dependencies]
+pytest = "7.*"
+# Test coverage
+pytest-cov = "3.*"
+# Clearer assertion failures (colorful diff)
+pytest-clarity = "1.*"
+# Expose unittest.Mocker in pytest
+pytest-mock = "*"
+# Test-specific data directories
+pytest-datadir = "*"
+
+[tool.poetry.group.docs.dependencies]
+# Main documentation-as-code (HTML/PDF generator)
+Sphinx = "5.*"
+# Read the docs (pretty) theme for sphinx
+sphinx-rtd-theme = "1.*"
+# Markdown parser for sphinx: Sphinx uses "RST" files, this adds markdown
+myst-parser = "*"
+# Automatic Python module docs (javadoc-style)
+sphinx-autoapi = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# Make isort work with Black
+# Avoids conflicting imports
+# As per https://pycqa.github.io/isort/docs/configuration/black_compatibility/#using-a-config-file-such-as-isortcfg
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+# Avoid pointless warning about performance hit of f-string in loggers
+[tool.pylint.message_control]
+disable = ["logging-fstring-interpolation"]
+
+[tool.pytest.ini_options]
+addopts = """-vv \
+      --doctest-modules \
+      --cov=mass_driver_plugins \
+      --cov-report=xml:test_results/coverage.xml \
+      --cov-report=html:test_results/coverage.html \
+      --cov-report=term \
+      --junit-xml=test_results/results.xml"""
+
+[tool.mypy]
+python_version = "3.10"
+
+[tool.poetry.plugins.'massdriver.drivers']
+poetry = 'mass_driver_plugins.poetry:Poetry'
+jsonpatch = 'mass_driver_plugins.jsonpatch:JsonPatch'
+yamlpatch = 'mass_driver_plugins.jsonpatch:YamlPatch'
+templater = 'mass_driver_plugins.template:TemplatedFile'
+surgical-base = 'mass_driver_plugins.surgical:SurgicalFileEditor'
+surgical-ghactionparamswitch = 'mass_driver_plugins.surgical:GithubActionParameterReplacer'

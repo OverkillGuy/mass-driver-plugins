@@ -1,0 +1,25 @@
+[mass-driver.migration]
+# Common name to remember the change by across all repos
+migration_name = "Change rust profile to default in CI"
+commit_message = """Change rust profile to default in CI
+
+For some reason, CI's rust toolchain profile is wrong.
+Edit the occurences of actions-rs/toolchain@v1 where profile
+was 'minimal' to be 'default', surgically (with minimal edits).
+"""
+
+# PatchDriver class to use.
+# Selected via plugin name, from "massdriver.drivers" entrypoint
+driver_name = "surgical-ghactionparamswitch"
+
+# The dict will be loaded verbatim into the relevant PatchDriver
+[mass-driver.migration.driver_config]
+target_file = "input.txt"
+
+# Action selector:
+action_target = "actions-rs/toolchain@v1"
+# Key/value to target:
+with_key_target = "profile"
+with_value_target = "minimal"
+# What to replace it with:
+with_value_replacement = "default"

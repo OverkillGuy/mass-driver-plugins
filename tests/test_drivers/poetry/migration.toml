@@ -1,0 +1,10 @@
+[mass-driver.migration]
+commit_message = """Update mass-driver"""
+
+driver_name = "poetry-surgical"
+branch_name = "bump-massdriver"
+
+[mass-driver.migration.driver_config]
+target_file = "input.txt"
+package = "mass-driver"
+target = "^0.18"
