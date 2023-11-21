@@ -6,11 +6,16 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 
 ## [Unreleased]
 
+### Added
+
+- Updated to mass-driver `0.18`
+
 ### Changed
 
 - Replace `poetry` driver with `poetry-surgical`
   - Old version relied on "poetry-core" pkg, which removed "save" feature.
   - Replaced with version using so-called "surgical" editing via tree-sitter.
+  - Other "surgical" editor (github actions one) is now a bit outdated, to be revised.
 
 
 ### Fixed

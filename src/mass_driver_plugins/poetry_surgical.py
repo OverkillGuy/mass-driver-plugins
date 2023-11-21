@@ -1,16 +1,14 @@
 """Poetry package version bump"""
 
 from copy import deepcopy
-from pathlib import Path
-from typing import Optional
 
-from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
-from mass_driver.models.repository import ClonedRepo
+from mass_driver.drivers.bricks import SingleFileEditor
+from mass_driver.models.patchdriver import PatchOutcome, PatchResult
 from tree_sitter import Node, Parser
 from tree_sitter_languages import get_language
 
 
-class PoetrySurgical(PatchDriver):
+class PoetrySurgical(SingleFileEditor):
     """Bump a package's major version in the pyproject.toml via Surgical editing
 
     Using the following:
@@ -40,7 +38,7 @@ class PoetrySurgical(PatchDriver):
     """The target package to update major version for"""
     target: str
     """Major version to which to upgrade the package if possible"""
-    package_group: Optional[str] = None
+    package_group: str | None = None
     """Package group if any(as defined in poetry>1.2) where to find package"""
 
     @property
@@ -49,12 +47,8 @@ class PoetrySurgical(PatchDriver):
         pkg_group = f".group.{self.package_group}" if self.package_group else ""
         return f"tool.poetry{pkg_group}.dependencies"
 
-    def run(self, repo: ClonedRepo) -> PatchResult:
-        """Process the template file"""
-        target_fullpath = repo.cloned_path / Path(self.target_file)
-        if not target_fullpath.is_file():
-            return PatchResult(outcome=PatchOutcome.PATCH_DOES_NOT_APPLY)
-        content_str = target_fullpath.read_text()
+    def process_file(self, content_str: str) -> str | PatchResult:
+        """Process the file"""
         language = get_language(self.language)
         query = language.query(self.query)
         parser = Parser()
@@ -75,10 +69,7 @@ class PoetrySurgical(PatchDriver):
                 details=f"Did not find package '{self.package}' in '{self.dependency_key}'",
             )
         edited_content = surgical_edit(content_str, self.target, to_replace_node)
-        if edited_content == content_str:
-            return PatchResult(outcome=PatchOutcome.ALREADY_PATCHED)
-        target_fullpath.write_text(edited_content)
-        return PatchResult(outcome=PatchOutcome.PATCHED_OK)
+        return edited_content
 
     def treesitter_query(self, captures, query, tree) -> list[Node]:
         """Search the tree for compatible node = pairs"""
@@ -107,7 +98,7 @@ class PoetrySurgical(PatchDriver):
             break  # This is the right pair, stop looking
         return dep_pairs
 
-    def find_package(self, deps: list[Node]) -> Optional[Node]:
+    def find_package(self, deps: list[Node]) -> Node | None:
         """Find the target package node, given all dep pairs"""
         target = None
         for node in deps:
