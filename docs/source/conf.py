@@ -29,12 +29,9 @@ author = "Jb Doyon"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.autosectionlabel",
     "sphinx.ext.viewcode",
-    "autoapi.extension",
     "myst_parser",
+    "autodoc2",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,14 +55,12 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-
-autoapi_type = "python"
-autoapi_dirs = ["../../src"]
-
-# Do not hijack toctree to add entry
-autoapi_add_toctree_entry = False
-
-# Make sure the target is unique
-autosectionlabel_prefix_document = True
+autodoc2_packages = [
+    "../../src/mass_driver_plugin",
+]
+# Enable all docstrings as Myst Markdown
+autodoc2_docstring_parser_regexes = [
+    (r".*", "myst"),
+]
 
 myst_heading_anchors = 2
