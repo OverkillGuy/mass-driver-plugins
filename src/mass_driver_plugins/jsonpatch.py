@@ -1,12 +1,12 @@
 """A JSON Patch (RFC6902) PatchDriver"""
 
-
 import json
+from pathlib import Path
 
 import jsonpatch
 from mass_driver.models.patchdriver import PatchDriver, PatchOutcome, PatchResult
 from mass_driver.models.repository import ClonedRepo
-from pydantic import Extra, FilePath
+from pydantic import FilePath
 from ruamel import yaml
 
 
@@ -17,11 +17,6 @@ class JsonPatchBase(PatchDriver):
     """File on which to apply Json Patch"""
     patch: list[dict] | str
     """JSON Patch, from RFC 6902"""
-
-    class Config:
-        """Configuration of the JsonPatch class"""
-
-        extra = Extra.allow
 
     def deserialize(self, fd) -> dict:
         """Load a data-tree particular file language of the day"""
@@ -36,7 +31,7 @@ class JsonPatchBase(PatchDriver):
         patch = self.patch
         if isinstance(self.patch, list):
             patch = jsonpatch.JsonPatch(self.patch)
-        json_filepath_abs = repo.cloned_path / self.target_file
+        json_filepath_abs = Path(repo.cloned_path) / self.target_file
         if not json_filepath_abs.is_file():
             return PatchResult(
                 outcome=PatchOutcome.PATCH_DOES_NOT_APPLY,

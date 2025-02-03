@@ -46,7 +46,7 @@ class SurgicalFileEditor(PatchDriver):
 
     def run(self, repo: ClonedRepo) -> PatchResult:
         """Process the template file"""
-        target_fullpath = repo.cloned_path / Path(self.target_file)
+        target_fullpath = Path(repo.cloned_path) / Path(self.target_file)
         if not target_fullpath.is_file():
             return PatchResult(outcome=PatchOutcome.PATCH_DOES_NOT_APPLY)
         content_str = target_fullpath.read_text()

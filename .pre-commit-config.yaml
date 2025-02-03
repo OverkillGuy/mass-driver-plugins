@@ -25,7 +25,7 @@ repos:
         name: Shellcheck
         args: ["-f", "gcc"]  # output filename:linenum:colnum (clickable)
 -   repo: https://github.com/AleksaC/hadolint-py
-    rev: v2.10.0
+    rev: v2.12.1b3
     hooks:
       - id: hadolint
         name: Hadolint (Dockerfile checker)
